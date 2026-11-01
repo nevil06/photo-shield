@@ -1,0 +1,39 @@
+# PhotoShield dependencies
+# Python 3.10 recommended (spec). Phase 1 also runs on 3.13.
+# Install:  pip install -r requirements.txt
+
+# --- Phase 1: I/O + metrics (CPU is enough) -------------------------------
+numpy>=1.26
+pillow>=10.2            # image I/O, EXIF handling
+scikit-image>=0.22      # SSIM
+torch>=2.2              # tensors; CPU build is fine for Phase 1-2
+torchvision>=0.17       # AlexNet trunk used by lpips
+lpips>=0.1.4            # perceptual distance (downloads a 233 MB trunk once)
+
+# --- dev ------------------------------------------------------------------
+pytest>=8.0
+
+# --- Phase 2: SD VAE (only the VAE is downloaded, ~330 MB) ------------------
+diffusers>=0.27         # AutoencoderKL for stabilityai/sd-vae-ft-mse
+safetensors>=0.4        # weight format of the VAE
+# diffusers -> transformers refuses huggingface_hub>=2 at import time.
+# If AutoencoderKL fails to import, run: pip install "huggingface_hub<2"
+huggingface_hub>=1.3,<2
+
+# --- Phase 3/5: editors ---------------------------------------------------
+# transformers>=4.40
+# accelerate>=0.29
+
+# --- Phase 3/5: identity --------------------------------------------------
+# ArcFace: exact ONNX weights for evaluation, onnx2torch for the differentiable
+# loss. We do NOT use the `insightface` pip package (C++ toolchain on Windows).
+onnx>=1.15
+onnxruntime>=1.17
+onnx2torch>=1.5
+opencv-python-headless>=4.9   # YuNet detector + warpAffine; no GUI deps
+
+# --- Phase 6: UI ----------------------------------------------------------
+# gradio>=4.26
+
+# --- Phase 4: differentiable JPEG -----------------------------------------
+# (implemented by hand in protect/transforms.py - no extra dependency)
